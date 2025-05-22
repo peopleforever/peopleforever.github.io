@@ -1,0 +1,56 @@
+/* 基础重置 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+
+@font-face {
+    font-family: 'maoti';
+    src: url('maozedong-1.ttf') format('truetype');
+    font-display: swap; /* 优化加载显示 */
+}
+
+/* 视频容器（新增伪元素方案） */
+.video-section {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+/* 模糊处理层 */
+.video-section::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* 关键：应用模糊滤镜 */
+    filter: blur(40px);
+    -webkit-filter: blur(50px);
+}
+/* 原始视频层 */
+#background-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02); /* 消除模糊白边 */
+}
+
+/* 清晰文字层 */
+.title-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* 确保在模糊层之上 */
+    color: red;
+    font-size: 10rem;
+    text-shadow: 0 0 15px rgba(0,0,0,0.8);
+    /** mix-blend-mode: overlay; /* 增强文字穿透效果 */
+    font-family: 'maoti', sans-serif; /* 备用字体为系统无衬线字体 */
+}
+
+/* 后续内容区 */
+.content-section {
+    height: 100vh;
+    padding: 80px 20px;
+    background: #f8f9fa;
+}

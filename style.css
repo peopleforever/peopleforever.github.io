@@ -18,6 +18,65 @@ a{
     font-display: swap; /* 优化加载显示 */
 }
 
+/* 红色主题按钮样式的a标签 */
+a.btn-red {
+  /* 基础样式 */
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #dc2626; /* 主红色 */
+  color: #ffffff; /* 白色文字 */
+  text-decoration: none;
+  border-radius: 4px; /* 圆角 */
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  border: none;
+  cursor: pointer; /* 鼠标悬停时显示手型 */
+  
+  /* 过渡动画 */
+  transition: all 0.2s ease;
+  
+  /* 轻微阴影增加立体感 */
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+}
+
+/* 悬停状态 - 加深颜色+提升阴影 */
+a.btn-red:hover {
+  background-color: #b91c1c; /* 深一点的红色 */
+  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+  transform: translateY(-1px); /* 轻微上浮 */
+}
+
+/* 点击状态 - 更深颜色+下沉效果 */
+a.btn-red:active {
+  background-color: #991b1b; /* 最深红色 */
+  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2);
+  transform: translateY(1px); /* 轻微下沉 */
+}
+
+/* 已访问状态 - 保持主色调统一 */
+a.btn-red:visited {
+  color: #ffffff; /* 确保文字始终白色 */
+}
+
+/* 聚焦状态 - 键盘导航支持 */
+a.btn-red:focus {
+  outline: 2px solid #f87171; /* 浅红色焦点边框 */
+  outline-offset: 2px;
+}
+
+/* 禁用状态（可选） */
+a.btn-red.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: #ef4444;
+  box-shadow: none;
+  transform: none;
+}
+
+
+
 /* 视频容器（新增伪元素方案） */
 .video-section {
     position: relative;
@@ -56,6 +115,20 @@ a{
     text-shadow: 0 0 15px rgba(0,0,0,0.8);
     /** mix-blend-mode: overlay; /* 增强文字穿透效果 */
     font-family: 'maoti', sans-serif; /* 备用字体为系统无衬线字体 */
+}
+
+
+
+.nav{
+    padding: 1em;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+.nav>a{
+    color: white;
+    padding: 1em;
+    font-size: 1.5em;
+    font-family: 'sunzhongshan',sans-serif;
 }
 
 /* 后续内容区 */
@@ -125,4 +198,12 @@ a{
     font-family: Arial, sans-serif;
     font-size: 1.2rem;
     color: #333;
+}
+
+footer{
+    background-color: #f8f9fa;
+    padding-bottom: 2em;
+}
+.reg{
+    text-align: center;
 }

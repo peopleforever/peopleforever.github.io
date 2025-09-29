@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人民万岁 - 实事求是</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#c41e3a', // 主红色
+            secondary: '#8b0000', // 深红色
+            accent: '#ff4500', // 亮红色
+            neutral: '#f8f8f8', // 背景色
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .article-shadow {
+        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.1);
+      }
+      .article-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .article-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(196, 30, 58, 0.2);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+  <!-- 导航栏 -->
+  <header class="bg-primary text-white shadow-md fixed w-full top-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-book text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold">实事求是</h1>
+      </div>
+      
+      <!-- 移动端菜单按钮 -->
+      <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+      
+      <!-- 桌面端导航 -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="https://github.com/peopleforever/peopleforever.github.io/issues" class="hover:text-gray-200 transition-colors">告诉我们</a>
+      </nav>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobileMenu" class="md:hidden bg-secondary hidden">
+      <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+        <a href="https://github.com/peopleforever/peopleforever.github.io/issues" class="py-2 hover:bg-primary/80 px-2 rounded transition-colors">告诉我们</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 pt-24 pb-16">
+    <!-- 页面标题 -->
+    <div class="text-center mb-12">
+      <h2 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-gray-800 mb-3">实记</h2>
+      <div class="w-20 h-1 bg-primary mx-auto"></div>
+    </div>
+    
+    <!-- 文章列表 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- 文章1 -->
+      <article class="bg-white rounded-lg overflow-hidden article-shadow article-hover">
+        <div class="relative">
+          <img src="../images/post/wuhandaxuetushuguanzhengyishijian/yjy.webp" alt="文章封面图" class="w-full h-56 object-cover">
+          <span class="absolute top-3 left-3 bg-primary text-white text-sm px-3 py-1 rounded-full">争议事件</span>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold mb-3 text-gray-800 hover:text-primary transition-colors">
+            <a href="./post/wuhandaxuetushuguanzhengyishijian.html">武汉大学图书馆争议事件</a>
+          </h3>
+          <p class="text-gray-600 mb-4 line-clamp-3">
+            2023年，中华人民共和国湖北省武汉大学的图书馆内发生一起性骚扰指控争议，后涉及司法程序，引发社会舆论。2023年10月，武汉大学研究生杨某某（女）在网络上举报本科生肖某某（男）在图书馆对其实施性骚扰，并公开其道歉信。学校随后对肖某某作出记过处分，引发社会关注。其后，肖某某否认骚扰行为，称因皮肤病抓痒被误解，并对处分提出申诉。2024年6月杨某某起诉肖某某，指控他在公共场所违背杨某某意志持续摩擦下体，应被认定为性骚扰，要求他在省级或以上报纸连续书面道歉15天，并支付精神抚慰金5000元。2025年7月湖北省武汉经济技术开发区人民法院判决驳回杨某某全部诉讼请求，认定不能证明构成性骚扰。之后杨某某通过社交平台发表争议言论，其硕士论文也被指存在学术不端。事件引发公众对高校性骚扰举报机制、诬告责任、网络暴力等问题的广泛讨论。
+          </p>
+          <div class="flex justify-between items-center text-gray-500 text-sm">
+          </div>
+        </div>
+      </article>
+    </div>
+
+
+  <!-- 返回顶部按钮 -->
+  <button id="backToTop" class="fixed bottom-6 right-6 bg-primary hover:bg-secondary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 invisible">
+    <i class="fa fa-angle-up text-xl"></i>
+  </button>
+
+  <script>
+    // 移动端菜单切换
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      const icon = menuBtn.querySelector('i');
+      if (mobileMenu.classList.contains('hidden')) {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      } else {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      }
+    });
+    
+    // 滚动效果
+    const header = document.querySelector('header');
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      // 导航栏滚动效果
+      if (window.scrollY > 50) {
+        header.classList.add('py-2');
+        header.classList.remove('py-3');
+        header.classList.add('bg-primary/95');
+        header.classList.add('backdrop-blur-sm');
+      } else {
+        header.classList.add('py-3');
+        header.classList.remove('py-2');
+        header.classList.remove('bg-primary/95');
+        header.classList.remove('backdrop-blur-sm');
+      }
+      
+      // 返回顶部按钮显示/隐藏
+      if (window.scrollY > 300) {
+        backToTop.classList.remove('opacity-0', 'invisible');
+        backToTop.classList.add('opacity-100', 'visible');
+      } else {
+        backToTop.classList.add('opacity-0', 'invisible');
+        backToTop.classList.remove('opacity-100', 'visible');
+      }
+    });
+    
+    // 返回顶部功能
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 文章卡片点击效果
+    document.querySelectorAll('article').forEach(article => {
+      article.addEventListener('click', (e) => {
+        // 如果点击的是链接，不触发卡片点击
+        if (e.target.tagName === 'A' || e.target.closest('a')) return;
+        
+        // 模拟点击文章标题链接
+        const link = article.querySelector('h3 a');
+        if (link) {
+          window.location.href = link.href;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

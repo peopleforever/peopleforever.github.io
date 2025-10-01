@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习语</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6366F1',
+                        accent: '#EC4899',
+                        neutral: '#1F2937',
+                        'neutral-light': '#F3F4F6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Noto Serif SC"', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                },
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .quote-card-hover {
+                transition: all 0.3s ease;
+            }
+            .quote-card-hover:hover {
+                transform: translateY(-5px);
+            }
+            .loading-spinner {
+                border-top-color: #3B82F6;
+                animation: spinner 0.8s linear infinite;
+            }
+            @keyframes spinner {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-neutral pt-8 pb-16">
+    <!-- 页面标题 -->
+    <div class="container mx-auto px-4 text-center mb-10">
+        <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-serif font-bold text-neutral mb-4">习语</h1>
+    </div>
+    
+    <!-- 搜索和筛选区域 -->
+    <div class="container mx-auto px-4 mb-10">
+        <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <!-- 搜索框 -->
+            <div class="w-full md:w-auto flex items-center relative w-full md:w-64">
+                <input type="text" id="search-input" placeholder="搜索语句..." 
+                    class="pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary w-full transition-all">
+                <i class="fa fa-search absolute left-3 text-gray-400"></i>
+            </div>
+            
+            <!-- 语句过滤器 -->
+            <div class="flex flex-wrap justify-center gap-2 w-full md:w-auto">
+                <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm font-medium transition-all" data-filter="all">
+                    全部
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 语句展示区 -->
+    <div class="container mx-auto px-4">
+        <!-- 加载状态 -->
+        <div id="loading" class="flex justify-center items-center py-16">
+            <div class="w-10 h-10 rounded-full border-4 border-gray-200 loading-spinner"></div>
+        </div>
+        
+        <!-- 错误提示 -->
+        <div id="error-message" class="hidden text-center py-16 text-red-500">
+            <i class="fa fa-exclamation-circle text-3xl mb-4"></i>
+            <p>加载语句失败，请稍后重试</p>
+        </div>
+        
+        <!-- 语句卡片网格 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="quotes-container">
+            <!-- 语句卡片将通过JavaScript动态生成 -->
+        </div>
+        
+        <!-- 加载更多按钮 -->
+        <div class="text-center mt-10">
+            <button id="load-more" class="px-6 py-3 bg-white border border-gray-200 rounded-full text-neutral hover:bg-neutral-light transition-all font-medium shadow-sm hidden">
+                加载更多 <i class="fa fa-angle-down ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all z-50">
+        <i class="fa fa-angle-up text-xl"></i>
+    </button>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="fixed top-6 right-6 bg-white shadow-xl rounded-lg p-4 max-w-xs transform translate-x-full opacity-0 transition-all z-50">
+        <div class="flex items-start">
+            <div id="notification-icon" class="mr-3 text-green-500">
+                <i class="fa fa-check-circle text-xl"></i>
+            </div>
+            <div>
+                <h3 id="notification-title" class="font-medium text-neutral">成功</h3>
+                <p id="notification-message" class="text-gray-600 text-sm mt-1">操作已完成</p>
+            </div>
+            <button id="close-notification" class="ml-auto text-gray-400 hover:text-gray-600">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 存储所有语句数据
+        let allQuotes = [];
+        // 存储当前显示的语句
+        let currentQuotes = [];
+        // 当前加载的页码
+        let currentPage = 1;
+        // 每页显示的数量
+        const quotesPerPage = 6;
+
+        // DOM元素
+        const quotesContainer = document.getElementById('quotes-container');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('search-input');
+        const loadMoreBtn = document.getElementById('load-more');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const notification = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notification-title');
+        const notificationMessage = document.getElementById('notification-message');
+        const notificationIcon = document.getElementById('notification-icon');
+        const closeNotification = document.getElementById('close-notification');
+        const loadingIndicator = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+
+        // 初始化页面
+        function init() {
+            // 加载JSON数据
+            loadQuotesData();
+            // 设置事件监听器
+            setupEventListeners();
+        }
+
+        // 从外部JSON文件加载语句数据
+        function loadQuotesData() {
+            fetch('yuju.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应不正常');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 存储加载的数据
+                    allQuotes = data;
+                    currentQuotes = [...allQuotes];
+                    
+                    // 隐藏加载状态，显示内容
+                    loadingIndicator.classList.add('hidden');
+                    loadMoreBtn.classList.remove('hidden');
+                    
+                    // 渲染初始语句
+                    renderQuotes();
+                })
+                .catch(error => {
+                    console.error('加载数据时出错:', error);
+                    // 显示错误信息
+                    loadingIndicator.classList.add('hidden');
+                    errorMessage.classList.remove('hidden');
+                });
+        }
+
+        // 渲染语句卡片
+        function renderQuotes() {
+            // 清空容器（仅在筛选或搜索时）
+            if (currentPage === 1) {
+                quotesContainer.innerHTML = '';
+            }
+            
+            // 获取当前页应显示的语句
+            const startIndex = (currentPage - 1) * quotesPerPage;
+            const endIndex = startIndex + quotesPerPage;
+            const quotesToRender = currentQuotes.slice(startIndex, endIndex);
+            
+            // 如果没有语句可显示
+            if (quotesToRender.length === 0 && currentPage === 1) {
+                quotesContainer.innerHTML = `
+                    <div class="col-span-full text-center py-16 text-gray-500">
+                        <i class="fa fa-search text-3xl mb-4"></i>
+                        <p>没有找到匹配的语句</p>
+                    </div>
+                `;
+                loadMoreBtn.classList.add('hidden');
+                return;
+            }
+            
+            // 如果没有更多语句可加载
+            if (quotesToRender.length === 0 && currentPage > 1) {
+                showNotification('提示', '没有更多语句了', 'info');
+                return;
+            }
+            
+            // 渲染语句卡片
+            quotesToRender.forEach((quote, index) => {
+                const card = document.createElement('div');
+                card.className = 'quote-card quote-card-hover bg-white rounded-xl shadow-md p-6 border border-gray-100 animate-fade-in';
+                card.setAttribute('data-category', quote.category);
+                card.setAttribute('data-id', quote.id);
+                
+                // 错开动画时间，创造层次感
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="text-${quote.color}-500/20 text-4xl mb-4">
+                        <i class="fa fa-quote-left"></i>
+                    </div>
+                    <blockquote class="font-serif text-lg text-gray-700 mb-4 italic">
+                        ${quote.content}
+                    </blockquote>
+                    <div class="flex justify-between items-center">
+                        <footer class="text-gray-500 text-sm">— ${quote.author}</footer>
+                        <div class="flex space-x-2">
+                            <span class="px-2 py-1 bg-${quote.color}-100 text-${quote.color}-800 text-xs rounded-full">${quote.categoryName}</span>
+                            <button class="text-gray-400 hover:text-primary transition-colors favorite-btn">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                quotesContainer.appendChild(card);
+                
+                // 为收藏按钮绑定事件
+                const favoriteBtn = card.querySelector('.favorite-btn');
+                favoriteBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleFavorite(favoriteBtn, quote.id);
+                });
+            });
+            
+            // 控制加载更多按钮显示状态
+            if (endIndex >= currentQuotes.length) {
+                loadMoreBtn.innerHTML = '没有更多了';
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            } else {
+                loadMoreBtn.innerHTML = '加载更多 <i class="fa fa-angle-down ml-1"></i>';
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 筛选按钮事件
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.getAttribute('data-filter');
+                    filterQuotes(filter);
+                    
+                    // 更新按钮样式
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-primary', 'text-white');
+                        btn.classList.add('bg-neutral-light', 'hover:bg-gray-200', 'text-neutral');
+                    });
+                    button.classList.add('active', 'bg-primary', 'text-white');
+                    button.classList.remove('bg-neutral-light', 'hover:bg-gray-200', 'text-neutral');
+                });
+            });
+            
+            // 搜索框事件
+            searchInput.addEventListener('input', (e) => {
+                searchQuotes(e.target.value);
+            });
+            
+            // 加载更多按钮事件
+            loadMoreBtn.addEventListener('click', loadMoreQuotes);
+            
+            // 返回顶部按钮事件
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 监听滚动显示/隐藏返回顶部按钮
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('opacity-0', 'invisible');
+                    backToTopBtn.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopBtn.classList.add('opacity-0', 'invisible');
+                    backToTopBtn.classList.remove('opacity-100', 'visible');
+                }
+            });
+            
+            // 关闭通知事件
+            closeNotification.addEventListener('click', hideNotification);
+        }
+
+        // 筛选语句
+        function filterQuotes(category) {
+            currentPage = 1; // 重置页码
+            
+            if (category === 'all') {
+                currentQuotes = [...allQuotes];
+            } else {
+                currentQuotes = allQuotes.filter(quote => quote.category === category);
+            }
+            
+            renderQuotes();
+        }
+
+        // 搜索语句
+        function searchQuotes(query) {
+            currentPage = 1; // 重置页码
+            query = query.toLowerCase().trim();
+            
+            if (!query) {
+                currentQuotes = [...allQuotes];
+                // 重置筛选按钮状态
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-primary', 'text-white');
+                    btn.classList.add('bg-neutral-light', 'hover:bg-gray-200', 'text-neutral');
+                });
+                filterButtons[0].classList.add('active', 'bg-primary', 'text-white');
+            } else {
+                currentQuotes = allQuotes.filter(quote => 
+                    quote.content.toLowerCase().includes(query) || 
+                    quote.author.toLowerCase().includes(query) ||
+                    quote.categoryName.toLowerCase().includes(query)
+                );
+                
+                // 重置筛选按钮状态
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-primary', 'text-white');
+                    btn.classList.add('bg-neutral-light', 'hover:bg-gray-200', 'text-neutral');
+                });
+            }
+            
+            renderQuotes();
+        }
+
+        // 加载更多语句
+        function loadMoreQuotes() {
+            const isLoading = loadMoreBtn.innerHTML.includes('fa-spinner');
+            if (isLoading || loadMoreBtn.disabled) return;
+            
+            // 显示加载状态
+            loadMoreBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 加载中...';
+            
+            // 模拟加载延迟
+            setTimeout(() => {
+                currentPage++;
+                renderQuotes();
+            }, 1000);
+        }
+
+        // 切换收藏状态
+        function toggleFavorite(button, quoteId) {
+            const icon = button.querySelector('i');
+            
+            if (icon.classList.contains('fa-heart-o')) {
+                icon.classList.remove('fa-heart-o');
+                icon.classList.add('fa-heart', 'text-accent');
+                showNotification('收藏成功', `已收藏语句 #${quoteId}`, 'success');
+            } else {
+                icon.classList.remove('fa-heart', 'text-accent');
+                icon.classList.add('fa-heart-o');
+                showNotification('取消收藏', `已取消收藏语句 #${quoteId}`, 'info');
+            }
+        }
+
+        // 显示通知
+        function showNotification(title, message, type = 'info') {
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // 设置图标和颜色
+            notificationIcon.className = '';
+            if (type === 'success') {
+                notificationIcon.classList.add('fa', 'fa-check-circle', 'text-green-500', 'text-xl', 'mr-3');
+            } else if (type === 'error') {
+                notificationIcon.classList.add('fa', 'fa-exclamation-circle', 'text-red-500', 'text-xl', 'mr-3');
+            } else {
+                notificationIcon.classList.add('fa', 'fa-info-circle', 'text-primary', 'text-xl', 'mr-3');
+            }
+            
+            // 显示通知
+            notification.classList.remove('translate-x-full', 'opacity-0');
+            notification.classList.add('translate-x-0', 'opacity-100');
+            
+            // 3秒后自动关闭
+            setTimeout(hideNotification, 3000);
+        }
+
+        // 隐藏通知
+        function hideNotification() {
+            notification.classList.add('translate-x-full', 'opacity-0');
+            notification.classList.remove('translate-x-0', 'opacity-100');
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

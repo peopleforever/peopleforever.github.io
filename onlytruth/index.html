@@ -197,5 +197,109 @@
       });
     });
   </script>
+  <script>
+    // 设置要检查的cookie名称
+const targetCookieName = "visited_flag";
+
+// 检查cookie是否存在的函数
+function checkCookieExists(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === cookieName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 设置cookie的函数
+function setCookie(cookieName, value, daysToLive) {
+    let cookie = `${cookieName}=${encodeURIComponent(value)}`;
+    if (daysToLive) {
+        const date = new Date();
+        date.setTime(date.getTime() + (daysToLive * 24 * 60 * 60 * 1000));
+        cookie += `; expires=${date.toUTCString()}`;
+    }
+    cookie += '; path=/';
+    document.cookie = cookie;
+}
+
+// 隐藏警告并显示正常页面
+function hideWarning(warningElement) {
+    warningElement.style.display = 'none';
+}
+
+// 创建并显示警告的函数
+function showWarning() {
+    // 创建全屏警告元素
+    const warningDiv = document.createElement('div');
+    warningDiv.style.position = 'fixed';
+    warningDiv.style.top = '0';
+    warningDiv.style.left = '0';
+    warningDiv.style.width = '100%';
+    warningDiv.style.height = '100%';
+    warningDiv.style.backgroundColor = 'red';
+    warningDiv.style.color = 'white';
+    warningDiv.style.display = 'flex';
+    warningDiv.style.flexDirection = 'column';
+    warningDiv.style.justifyContent = 'center';
+    warningDiv.style.alignItems = 'center';
+    warningDiv.style.fontFamily = 'Arial, sans-serif';
+    warningDiv.style.zIndex = '9999';
+    warningDiv.style.textAlign = 'center';
+    
+    // 添加警告内容
+    const title = document.createElement('h1');
+    title.textContent = '警告';
+    title.style.marginBottom = '10px';
+    
+    const text = document.createElement('p');
+    text.textContent = '本站只允许年龄满18岁而且心智成熟具有独立思考能力的人阅览，如果你的政治观念和独立思考的能力自我感觉不足，请离开！本站内容均为客观记录，无任何主观内容。一切内容请自己思考，大量资料来自于维基百科。';
+    text.style.fontSize = '1.5em';
+    text.style.marginBottom = '30px';
+    
+    // 添加关闭按钮
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '确认并继续';
+    closeBtn.style.padding = '10px 20px';
+    closeBtn.style.fontSize = '1em';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.backgroundColor = 'white';
+    closeBtn.style.color = 'red';
+    closeBtn.style.border = 'none';
+    closeBtn.style.borderRadius = '5px';
+    closeBtn.style.transition = 'all 0.3s ease';
+    
+    // 按钮悬停效果
+    closeBtn.addEventListener('mouseover', () => {
+        closeBtn.style.backgroundColor = '#f0f0f0';
+    });
+    
+    closeBtn.addEventListener('mouseout', () => {
+        closeBtn.style.backgroundColor = 'white';
+    });
+    
+    // 点击按钮隐藏警告
+    closeBtn.addEventListener('click', () => {
+        hideWarning(warningDiv);
+    });
+    
+    warningDiv.appendChild(title);
+    warningDiv.appendChild(text);
+    warningDiv.appendChild(closeBtn);
+    
+    // 添加到页面
+    document.body.appendChild(warningDiv);
+}
+
+// 主逻辑
+if (!checkCookieExists(targetCookieName)) {
+    // 不存在cookie，显示警告并设置cookie
+    showWarning();
+    setCookie(targetCookieName, "true", 365); // 设置cookie有效期为1年
+}
+
+  </script>
 </body>
 </html>

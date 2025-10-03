@@ -15,3 +15,7 @@
 
 # 人民万岁
 ![开国大典](https://upload.wikimedia.org/wikipedia/commons/8/85/Mao_Proclaiming_New_China.JPG)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=peopleforever/peopleforever.github.io&type=Date)](https://www.star-history.com/#peopleforever/peopleforever.github.io&Date)

@@ -207,3 +207,15 @@ footer{
 .reg{
     text-align: center;
 }
+
+.new-tips{
+    display: flex;
+    background-color: #f8f9fa;
+    padding-top: 2em;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+.new-tips-title{
+    display:flex;
+}

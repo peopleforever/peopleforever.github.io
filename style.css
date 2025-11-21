@@ -112,7 +112,7 @@ a.btn-red.disabled {
     z-index: 2; /* 确保在模糊层之上 */
     color: red;
     font-size: 10rem;
-    text-shadow: 0 0 15px rgba(0,0,0,0.8);
+    text-shadow: 0 0 15px rgb(255 50 50 / 80%);
     /** mix-blend-mode: overlay; /* 增强文字穿透效果 */
     font-family: 'maoti', sans-serif; /* 备用字体为系统无衬线字体 */
 }

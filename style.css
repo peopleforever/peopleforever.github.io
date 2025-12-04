@@ -8,13 +8,13 @@ a{
 
 @font-face {
     font-family: 'maoti';
-    src: url('maozedong-1.ttf') format('truetype');
+    src: url('https://cdn.xn--chqvql55aj9o.com/maozedong-1.ttf') format('truetype');
     font-display: swap; /* 优化加载显示 */
 }
 
 @font-face {
     font-family: 'sunzhongshan';
-    src: url('./sunzhongshan.ttf') format('truetype');
+    src: url('https://cdn.xn--chqvql55aj9o.com/sunzhongshan.ttf') format('truetype');
     font-display: swap; /* 优化加载显示 */
 }
 

@@ -21,6 +21,7 @@ a{
 /* 红色主题按钮样式的a标签 */
 a.btn-red {
   /* 基础样式 */
+  margin-top: 1em;
   display: inline-block;
   padding: 8px 16px;
   background-color: #dc2626; /* 主红色 */

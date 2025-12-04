@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>星空纪念</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    canvas { display: block; } /* 去掉滚动条 */
+    
+    .center-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-size: 28px;
+        text-align: center;
+        line-height: 1.8;
+        text-shadow: 0 0 20px rgba(255,255,255,0.8);
+        z-index: 10;
+        max-width: 90%;
+        pointer-events: none; /* 不挡住鼠标事件 */
+    }
+    @media (max-width: 768px) {
+        .center-text { font-size: 20px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="center-text">
+    <h1>英雄不朽</h1>
+    
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+// ---------- 你可以在这里修改名字列表 ----------
+const names = [
+    "小萝卜头","王二小","刘胡兰","董存瑞","黄继光","邱少云",,"李大钊","王尽美","王尔琢",
+    "黄公略","董振堂","江竹筠","伍先华","胡修道","柴云振","杨靖宇","赵尚志","赵一曼",
+    "彭雪枫","左权","马本斋","马立训","方志敏","冷云","于化虎","小叶丹","陈延年","赵世炎",
+    "张太雷","夏明翰","罗亦农","苏兆征","彭湃","杨开慧","陈毅安","恽代英","蔡和森","韦拔群",
+    "蔡申熙","钱壮飞","朱瑞","罗盛教","毛岸英","张富清","王进喜","孟泰","雷锋","焦裕禄",
+    "孔繁森","任长霞","王伟","李向山","杨法震","阎普润","曹基锡","陈镜湖","郑桂林","吉鸿昌",
+    "张自忠","戴安澜","瞿秋白","白思才","李云鹏","马宝玉","葛振林","宋学义","胡德林","胡福才",
+    "麦贤得","张国福","罗光燮","岩龙","于庆阳","续范亭","坂本贤阶","徐乃祯","闻一多","宋绮云",
+    "邓发","解文卿","许晓轩","李白","罗世文","李混子","陈树棠","刘光荣","杨子荣","陈洁","陈金合",
+    "马思进","王西兰","林文虎","阿不都克里木·阿巴索夫","关向应","罗炳辉","杨虎城","李兆麟","叶挺",
+    "王若飞","郭蓉蓉","黄金霞","林心平","刘耀梅","王光","杨岭梅","李海峰","严洪珠","程克明","陈铁康",
+    "王殿元","王海","杨根思","杨美婷","谢晋元","陈翰章","郭国言","侯宜禄","张智发","胡文权","曹洪德",
+    "陈龙飞","马兴周","孙铭宸","高兴亚","马耀南","马晓云","马天民","肖永智","林基路","鲁宝琪","李汉卿",
+    "孙占彪","王俭","张兴德","伍世英","李子秀","曾生","冯白驹","周保中","李红光","王德泰","夏云杰","汪雅臣",
+    "祁致中","胡秀芝","杨贵珍","郭桂琴","黄桂清","王惠民","李凤善","安顺福","宋阿毛","杨连第","孙占元","杨春增",
+    "贠宝山","李家发","孙生禄","梁英瑞","李延年","杜富国","陈红军","肖思远","王焯冉","陈祥榕","苏宁","李向群",
+    "杨业功","关喜志","柯占军","张超","韩子栋","宋振平","张文津","吴祖贻","毛楚雄","卢德铭","张子清","何挺颖",
+    "袁文才","王佐","贺锦斋","周逸群","江姐","段德昌","赵德才","黄标"
+];
+// ------------------------------------------------
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let w, h, stars = [], smallStars = [];
+
+function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// 小星星背景（点缀）
+for(let i = 0; i < 300; i++) {
+    smallStars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.5,
+        brightness: Math.random()
+    });
+}
+
+// 名字星星
+class Star {
+    constructor(text) {
+        this.text = text;
+        this.reset();
+        this.twinklePhase = Math.random() * Math.PI * 2;
+        this.twinkleSpeed = 0.02 + Math.random() * 0.03;
+    }
+    reset() {
+        this.size = 14 + Math.random() * 18;
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        // 避免一开始就出现在正中间文字区域
+        const dx = this.x - w/2;
+        const dy = this.y - h/2;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 200) {
+            this.x = w * 0.1 + Math.random() * w * 0.8;
+            this.y = h * 0.1 + Math.random() * h * 0.8;
+        }
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // 边界反弹（柔和一点）
+        if(this.x < 0 || this.x > w) this.vx *= -1;
+        if(this.y < 0 || this.y > h) this.vy *= -1;
+        
+        // 偶尔随机改变方向（更自然）
+        if(Math.random() < 0.003) {
+            this.vx += (Math.random() - 0.5) * 0.3;
+            this.vy += (Math.random() - 0.5) * 0.3;
+            // 限制最大速度
+            const speed = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+            if(speed > 0.8) {
+                this.vx /= speed * 0.8;
+                this.vy /= speed * 0.8;
+            }
+        }
+        
+        this.twinklePhase += this.twinkleSpeed;
+    }
+    draw() {
+        const opacity = 0.6 + 0.4 * Math.sin(this.twinklePhase); // 0.6~1.0 闪烁
+        const glow = 10 + 15 * opacity;
+        
+        // 发光效果
+        ctx.shadowBlur = glow;
+        ctx.shadowColor = '#fff';
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        ctx.font = `bold ${this.size}px Microsoft YaHei, Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
+
+// 生成名字星星
+names.forEach(name => {
+    stars.push(new Star(name));
+});
+
+function drawBackgroundStars() {
+    ctx.fillStyle = '#fff';
+    smallStars.forEach(s => {
+        const twinkle = 0.3 + 0.7 * Math.sin(Date.now() * 0.001 + s.brightness * 10);
+        ctx.globalAlpha = twinkle * 0.8;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+}
+
+function animate() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // 残影效果
+    ctx.fillRect(0, 0, w, h);
+    
+    drawBackgroundStars();
+    
+    stars.forEach(star => {
+        star.update();
+        star.draw();
+    });
+    
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

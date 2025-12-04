@@ -1,79 +1,100 @@
 /* 基础重置 */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-a{
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+a {
     text-decoration: none;
 }
 
 @font-face {
     font-family: 'maoti';
     src: url('./maozedong-1.ttf') format('truetype');
-    font-display: swap; /* 优化加载显示 */
+    font-display: swap;
+    /* 优化加载显示 */
 }
 
 @font-face {
     font-family: 'sunzhongshan';
     src: url('./sunzhongshan.ttf') format('truetype');
-    font-display: swap; /* 优化加载显示 */
+    font-display: swap;
+    /* 优化加载显示 */
 }
 
 /* 红色主题按钮样式的a标签 */
 a.btn-red {
-  /* 基础样式 */
-  margin-top: 1em;
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #dc2626; /* 主红色 */
-  color: #ffffff; /* 白色文字 */
-  text-decoration: none;
-  border-radius: 4px; /* 圆角 */
-  font-weight: 500;
-  font-size: 14px;
-  text-align: center;
-  border: none;
-  cursor: pointer; /* 鼠标悬停时显示手型 */
-  
-  /* 过渡动画 */
-  transition: all 0.2s ease;
-  
-  /* 轻微阴影增加立体感 */
-  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+    /* 基础样式 */
+    margin-top: 1em;
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #dc2626;
+    /* 主红色 */
+    color: #ffffff;
+    /* 白色文字 */
+    text-decoration: none;
+    border-radius: 4px;
+    /* 圆角 */
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    /* 鼠标悬停时显示手型 */
+
+    /* 过渡动画 */
+    transition: all 0.2s ease;
+
+    /* 轻微阴影增加立体感 */
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
 }
 
 /* 悬停状态 - 加深颜色+提升阴影 */
 a.btn-red:hover {
-  background-color: #b91c1c; /* 深一点的红色 */
-  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
-  transform: translateY(-1px); /* 轻微上浮 */
+    background-color: #b91c1c;
+    /* 深一点的红色 */
+    box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+    transform: translateY(-1px);
+    /* 轻微上浮 */
 }
 
 /* 点击状态 - 更深颜色+下沉效果 */
 a.btn-red:active {
-  background-color: #991b1b; /* 最深红色 */
-  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2);
-  transform: translateY(1px); /* 轻微下沉 */
+    background-color: #991b1b;
+    /* 最深红色 */
+    box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2);
+    transform: translateY(1px);
+    /* 轻微下沉 */
 }
 
 /* 已访问状态 - 保持主色调统一 */
 a.btn-red:visited {
-  color: #ffffff; /* 确保文字始终白色 */
+    color: #ffffff;
+    /* 确保文字始终白色 */
 }
 
 /* 聚焦状态 - 键盘导航支持 */
 a.btn-red:focus {
-  outline: 2px solid #f87171; /* 浅红色焦点边框 */
-  outline-offset: 2px;
+    outline: 2px solid #f87171;
+    /* 浅红色焦点边框 */
+    outline-offset: 2px;
 }
 
 /* 禁用状态（可选） */
 a.btn-red.disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
-  background-color: #ef4444;
-  box-shadow: none;
-  transform: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #ef4444;
+    box-shadow: none;
+    transform: none;
 }
 
 
@@ -84,6 +105,7 @@ a.btn-red.disabled {
     height: 100vh;
     overflow: hidden;
 }
+
 /* 模糊处理层 */
 .video-section::before {
     content: '';
@@ -95,13 +117,15 @@ a.btn-red.disabled {
     filter: blur(40px);
     -webkit-filter: blur(50px);
 }
+
 /* 原始视频层 */
 #background-video {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.02); /* 消除模糊白边 */
+    transform: scale(1.02);
+    /* 消除模糊白边 */
 }
 
 /* 清晰文字层 */
@@ -110,26 +134,29 @@ a.btn-red.disabled {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 2; /* 确保在模糊层之上 */
+    z-index: 2;
+    /* 确保在模糊层之上 */
     color: red;
     font-size: 10rem;
     text-shadow: 0 0 15px rgb(255 50 50 / 80%);
     /** mix-blend-mode: overlay; /* 增强文字穿透效果 */
-    font-family: 'maoti', sans-serif; /* 备用字体为系统无衬线字体 */
+    font-family: 'maoti', sans-serif;
+    /* 备用字体为系统无衬线字体 */
 }
 
 
 
-.nav{
+.nav {
     padding: 1em;
     background-color: #f8f9fa;
     text-align: center;
 }
-.nav>a{
+
+.nav>a {
     color: white;
     padding: 1em;
     font-size: 1.5em;
-    font-family: 'sunzhongshan',sans-serif;
+    font-family: 'sunzhongshan', sans-serif;
 }
 
 /* 后续内容区 */
@@ -138,15 +165,16 @@ a.btn-red.disabled {
     background: #f8f9fa;
 }
 
-.maoti{
-    font-family: 'maoti', sans-serif; /* 备用字体为系统无衬线字体 */
+.maoti {
+    font-family: 'maoti', sans-serif;
+    /* 备用字体为系统无衬线字体 */
 }
 
-.sunzhongshanti{
-    font-family: 'sunzhongshan',sans-serif;
+.sunzhongshanti {
+    font-family: 'sunzhongshan', sans-serif;
 }
 
-.mrt-title{
+.mrt-title {
     text-align: center;
     color: red;
     font-size: 3rem;
@@ -163,6 +191,7 @@ a.btn-red.disabled {
     max-width: 1600px;
     margin: 2em auto;
 }
+
 /* 单个卡牌样式 */
 .card {
     width: 250px;
@@ -173,11 +202,13 @@ a.btn-red.disabled {
     transition: transform 0.3s ease;
     cursor: pointer;
 }
+
 /* 悬停动画效果 */
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
+
 /* 图片容器 */
 .card-image {
     width: 100%;
@@ -185,6 +216,7 @@ a.btn-red.disabled {
     overflow: hidden;
     position: relative;
 }
+
 /* 图片样式 */
 .card-image img {
     width: 100%;
@@ -192,6 +224,7 @@ a.btn-red.disabled {
     object-fit: cover;
     transition: transform 0.3s ease;
 }
+
 /* 文字描述 */
 .card-label {
     padding: 1rem;
@@ -201,15 +234,16 @@ a.btn-red.disabled {
     color: #333;
 }
 
-footer{
+footer {
     background-color: #f8f9fa;
     padding-bottom: 2em;
 }
-.reg{
+
+.reg {
     text-align: center;
 }
 
-.new-tips{
+.new-tips {
     display: flex;
     background-color: #f8f9fa;
     padding-top: 2em;
@@ -217,6 +251,7 @@ footer{
     align-content: center;
     align-items: center;
 }
-.new-tips-title{
-    display:flex;
+
+.new-tips-title {
+    display: flex;
 }

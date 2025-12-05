@@ -1,4 +1,5 @@
-![chat_on_discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg) [Click Me](https://discord.gg/HwUckc6m)
+![chat_on_discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg) [Click Me](https://discord.gg/HwUckc6m)  
+
 ![star_on_github](https://img.shields.io/badge/Star_On-GitHub-blue) [Click Me](https://github.com/peopleforever/peopleforever.github.io/)
 # 人民的定义
 

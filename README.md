@@ -1,3 +1,5 @@
+![chat_on_discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg) [Click Me](https://discord.gg/HwUckc6m)
+![star_on_github](https://img.shields.io/badge/Star_On-GitHub-blue) [Click Me](https://github.com/peopleforever/peopleforever.github.io/)
 # 人民的定义
 
 在中华人民共和国的官方用语中，人民是阶级概念，指拥护社会主义制度的“爱国者”，与敌人相对立。  
